@@ -24,3 +24,8 @@ Revision history for Perl extension VMS::Monitor.
 0.06  Tue Oct 13 11:23:43 1998
     - Fixed call to sys$clref (takes an event flag #, not pointer. Duh!).
       Fix courtesy of Kent Covert
+
+0.07  Sat Apr 11 11:06:00 2009
+    - Changed C<#ifdef __ALPHA> to C<#ifndef __VAX> so we can run on OpenVMS I64.
+    - Modernized a few global variables (e.g., sv_yes -> PL_sv_yes).
+

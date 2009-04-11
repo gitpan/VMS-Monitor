@@ -15,7 +15,7 @@ require AutoLoader;
 @EXPORT = qw(
 	
 );
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 
 bootstrap VMS::Monitor $VERSION;
@@ -29,7 +29,7 @@ __END__
 
 =head1 NAME
 
-VMS::Monitor - Access system performace information
+VMS::Monitor - Access system performace information on OpenVMS systems
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ Retrieve performace info via the $GETSPI system call.
 =head1 RANDOM THINGS
 
 Important stuff that I might otherwise forget (yes, it is sort of stream of
-conciousness documentation. Be afraid, be I<very> afraid...):
+consciousness documentation. Be afraid, be I<very> afraid...):
 
 =item Almost everything's an integer
 
@@ -84,7 +84,8 @@ stripped off at some point before this goes final, though.
 
 =head1 AUTHOR
 
-Dan Sugalski <sugalskd@ous.edu>
+Dan Sugalski <dan@sidhe.org>
+Maintained by Craig A. Berry <craigberry@mac.com>
 
 =head1 SEE ALSO
 

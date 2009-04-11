@@ -141,9 +141,9 @@ typedef struct {char  *ItemName;         /* Name of the item we're getting */
 #define bit_test(HVPointer, BitToCheck, HVEntryName, EncodedMask) \
 { \
     if ((EncodedMask) & (BitToCheck)) \
-    hv_store((HVPointer), (HVEntryName), strlen((HVEntryName)), &sv_yes, 0); \
+    hv_store((HVPointer), (HVEntryName), strlen((HVEntryName)), &PL_sv_yes, 0); \
     else \
-    hv_store((HVPointer), (HVEntryName), strlen((HVEntryName)), &sv_no, 0);}   
+    hv_store((HVPointer), (HVEntryName), strlen((HVEntryName)), &PL_sv_no, 0);}   
 
 #define IS_STRING 1
 #define IS_LONGWORD 2
@@ -558,6 +558,7 @@ char *MonthNames[12] = {
      
 MODULE = VMS::Monitor		PACKAGE = VMS::Monitor		
 
+PROTOTYPES: DISABLE
 
 void
 monitor_info_names()
@@ -584,7 +585,7 @@ one_monitor_piece(infoname)
   struct proc_info *ReturnProcInfo;    /* Pointer to a proc_info struct */
   struct mode_info *ReturnModeInfo;    /* Pointer to a mode_info struct */
   unsigned short BufferLength;
-#ifdef __ALPHA
+#ifndef __VAX
   unsigned __int64 ReturnQuadWordBuffer;
 #endif
   int status;
@@ -595,7 +596,7 @@ one_monitor_piece(infoname)
   int EventFlag;
   
   for (i = 0; MonitorInfoList[i].InfoName; i++) {
-    if (strEQ(MonitorInfoList[i].InfoName, SvPV(infoname, na))) {
+    if (strEQ(MonitorInfoList[i].InfoName, SvPV_nolen(infoname))) {
       break;
     }
   }
@@ -603,7 +604,7 @@ one_monitor_piece(infoname)
   /* Did we find a match? If not, complain and exit */
   if (MonitorInfoList[i].InfoName == NULL) {
     warn("Invalid monitor info item");
-    ST(0) = &sv_undef;
+    ST(0) = &PL_sv_undef;
   } else {
     /* allocate our item list */
     ITMLST OneItem[2];
@@ -635,7 +636,7 @@ one_monitor_piece(infoname)
       
       /* Done */
       break;
-#ifdef __ALPHA
+#ifndef __VAX
     case IS_QUADWORD:
       /* Fill in the item list */
       init_itemlist(&OneItem[0], MonitorInfoList[i].BufferLen,
@@ -694,7 +695,7 @@ one_monitor_piece(infoname)
         /* Give back the buffer */
         free(ReturnStringBuffer);
         break;
-#ifdef __ALPHA
+#ifndef __VAX
       case IS_QUADWORD:
         sprintf(QuadWordString, "%llu", ReturnQuadWordBuffer);
         ST(0) = sv_2mortal(newSVpv(QuadWordString, 0));
@@ -938,12 +939,12 @@ one_monitor_piece(infoname)
         free(ReturnStringBuffer);
         break;
       default:
-        ST(0) = &sv_undef;
+        ST(0) = &PL_sv_undef;
         break;
       }
     } else {
       SETERRNO(EVMSERR, status);
-      ST(0) = &sv_undef;
+      ST(0) = &PL_sv_undef;
       /* free up the buffer if we were looking for a string */
       if (MonitorInfoList[i].ReturnType == IS_STRING)
         free(ReturnStringBuffer);

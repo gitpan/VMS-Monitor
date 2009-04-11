@@ -3,6 +3,7 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     'NAME'	=> 'VMS::Monitor',
+    'ABSTRACT_FROM' => 'Monitor.pm', 
     'VERSION_FROM' => 'Monitor.pm', # finds $VERSION
     'LIBS'	=> ['-lSPISHR'],   # e.g., '-lm' 
     'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' 
